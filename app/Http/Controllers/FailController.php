@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kedai;
+use App\Models\Fail;
 use Illuminate\Http\Request;
 
-class KedaiController extends Controller
+class FailController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class KedaiController extends Controller
      */
     public function index()
     {
-
-        return redirect('/kedais/');
+        //
     }
 
     /**
@@ -34,31 +33,42 @@ class KedaiController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        //
+        $fileModel = new Fail;
+
+        if($req->file()) {
+            $fileName = time().'_'.$req->file->getClientOriginalName();
+            $filePath = $req->file('file')->storeAs('uploads', $fileName, 'public');
+
+            $fileModel->name = time().'_'.$req->file->getClientOriginalName();
+            $fileModel->file_path = '/movie/' . $filePath;
+            $fileModel->save();
+
+            return back()
+            ->with('success','File has been uploaded.')
+            ->with('file', $fileName);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Kedai  $kedai
+     * @param  \App\Models\Fail  $fail
      * @return \Illuminate\Http\Response
      */
-    public function show(Kedai $kedai)
+    public function show(Fail $fail)
     {
-        return view('kedais.show',[
-            'kedai'=>$kedai
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Kedai  $kedai
+     * @param  \App\Models\Fail  $fail
      * @return \Illuminate\Http\Response
      */
-    public function edit(Kedai $kedai)
+    public function edit(Fail $fail)
     {
         //
     }
@@ -67,29 +77,21 @@ class KedaiController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Kedai  $kedai
+     * @param  \App\Models\Fail  $fail
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Kedai $kedai)
+    public function update(Request $request, Fail $fail)
     {
-        $kedai->nama = $request->nama;
-        $kedai->lokasi = $request->lokasi;
-
-        $kedai->movie_id = $request->movie_id;
-        $kedai->belian_id = $request->belian_id;
-
-        // $kedai>save();
-
-        return redirect('/kedais/');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Kedai  $kedai
+     * @param  \App\Models\Fail  $fail
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Kedai $kedai)
+    public function destroy(Fail $fail)
     {
         //
     }

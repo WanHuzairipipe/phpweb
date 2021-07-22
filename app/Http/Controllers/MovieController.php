@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Moviebaru;
+use Illuminate\Support\Facades\Http;
+
 class MovieController extends Controller
 {
     /**
@@ -14,9 +18,13 @@ class MovieController extends Controller
      */
     public function index()
     {
+        $response = Http::get('https://swapi.dev/api/people');
+
+        $response->json();
         $movies = Movie::all();
         return view('movies.index',[
-            'movies'=>$movies
+            'movies'=>$movies,
+            'starwar' => $response['results']
         ]);
     }
 
@@ -50,7 +58,10 @@ class MovieController extends Controller
 
         $movie->save();
 
-        return redirect('/movies/');
+        foreach (['whoone3@gmail.com', 'najhan.mnajib@gmail.com'] as $recipient) {
+            Mail::to($recipient)->send(new MovieBaru());
+        }
+        return redirect('/movie/');
     }
 
     /**
@@ -86,6 +97,10 @@ class MovieController extends Controller
      */
     public function update(Request $request, Movie $movie)
     {
+        $path = $request->file('file')->store('files');
+
+        dd($path);
+
         $movie->nama = $request->nama;
         $movie->harga = $request->harga;
         $movie->genre = $request->genre;
@@ -95,7 +110,7 @@ class MovieController extends Controller
 
         $movie->save();
 
-        return redirect('/movies/');
+        return redirect('/movie/');
     }
 
     /**

@@ -14,15 +14,6 @@ class BelianController extends Controller
      */
     public function index()
     {
-        $belian = new Belian;
-        
-        $belian->tarikh = $request->tarikh;
-        $belian->harga = $request->harga;
-
-        $belian->movie_id = $request->movie_id;
-        $belian->kedai_id = $request->kedai_id;
-
-        $belian->save();
 
         return redirect('/belians/');
     }
